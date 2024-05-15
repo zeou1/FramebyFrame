@@ -133,7 +133,7 @@ dvSorter <- function(ffDir,
   if(!is.na(date0) & !is.na(time0)) {
     cat('\t \t \t >>> User gave date0 & time0 manually. \n')
     startts <- paste(date0, time0)
-    startts <- lubridate::dmy_hms(startts)
+    startts <- lubridate::mdy_hms(startts)
 
   # if user did not give it, assume we take it from the DV file header
   } else {
@@ -142,7 +142,7 @@ dvSorter <- function(ffDir,
     # ! this is when the user presses start but not necessarily when recording starts, if I understand correctly
     start0 <- dvhead[which(dvhead$V1=='Start time'), 2]
     # process it with lubridate
-    start0 <- lubridate::dmy_hms(start0)
+    start0 <- lubridate::mdy_hms(start0)
 
     # then we need to add 'recording after'
     delay <- lubridate::hms ( dvhead[which(dvhead$V1=='Recording after'), 2] )
