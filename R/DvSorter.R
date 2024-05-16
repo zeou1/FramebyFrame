@@ -101,14 +101,14 @@ dvSorter <- function(ffDir,
   ## now to import the first file:
   dvpath1 <- paste0(ffDir, dvnames[1])
   # first row of file gives number of header rows
-  nheadrows <- as.numeric(read.csv(dvpath1, fileEncoding='utf-8', sep=';', nrows=1, header=FALSE)[,2])
+  nheadrows <- as.numeric(read.csv(dvpath1, fileEncoding='UTF-8', sep=';', nrows=1, header=FALSE)[,2])
   cat('\t \t \t \t \t >>>', nheadrows,'header rows \n')
 
   # how many columns should we prepare?
   ncols <- max(count.fields(dvpath1, sep=';', blank.lines.skip=TRUE), na.rm=TRUE)
 
   # so now to import all header rows:
-  dvhead <- read.csv(dvpath1, fileEncoding='utf-8', sep=';', nrows=nheadrows, header=FALSE, col.names=sprintf('V%i', 1:ncols), fill=TRUE)
+  dvhead <- read.csv(dvpath1, fileEncoding='UTF-8', sep=';', nrows=nheadrows, header=FALSE, col.names=sprintf('V%i', 1:ncols), fill=TRUE)
 
   # we get column names from header rows
   # it is the row starting with Trial time
@@ -162,7 +162,7 @@ dvSorter <- function(ffDir,
   cat('\t \t \t >>> Importing all data. \n')
   pw <- lapply(1:length(dvnames), function(i) {
     cat('\t \t \t \t >>> imported file #', i, '/', length(dvnames), '\n')
-    wed <- read.csv(paste0(ffDir, dvnames[i]), fileEncoding='utf-8', sep=';', comment.char='"', skip=nheadrows, header=FALSE, col.names=dvcols, fill=TRUE,
+    wed <- read.csv(paste0(ffDir, dvnames[i]), fileEncoding='UTF-8', sep=';', comment.char='"', skip=nheadrows, header=FALSE, col.names=dvcols, fill=TRUE,
                     colClasses=colskips)
   })
   # pw is per well, matches variable name in vpSorter
@@ -173,7 +173,7 @@ dvSorter <- function(ffDir,
   # so Arena ID from each file
   wellids <- sapply(1:length(dvnames), function(i) {
     # read Arena ID header row
-    arenaid <- read.csv(paste0(ffDir, dvnames[i]), fileEncoding='utf-8', sep=';', skip=wellrow-1, nrows=1, header=FALSE, fill=TRUE)
+    arenaid <- read.csv(paste0(ffDir, dvnames[i]), fileEncoding='UTF-8', sep=';', skip=wellrow-1, nrows=1, header=FALSE, fill=TRUE)
     # extract just the well ID, e.g. 3
     # +1 because it starts counting at 0
     return( as.integer(arenaid[1,2])+1 )
