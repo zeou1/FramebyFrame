@@ -333,6 +333,9 @@ dvSorter <- function(ffDir,
   # we can simply pool all the indices and keep unique:
   naframes <- unique(as.vector(unlist(naframes)))
 
+  # frames per second before NA frame removal
+  fps_before <- 1/mean(diff(bx$exsecs))
+
   # we now delete the NA frames
   bx <- bx[-naframes,]
 
@@ -348,10 +351,13 @@ dvSorter <- function(ffDir,
   # = all raw data in one csv file
 
   tocout <- tictoc::toc(quiet=TRUE) # toc output
+  
+  #FPS after NA frames removal
+  fps_after <- 1/mean(diff(bx$exsecs))
 
-  fps <- 1/mean(diff(bx$exsecs))
-  cat('\t \t \t >>> Sorted around', round(nrow(bx)/fps/60/60, 1), 'hours of data in',
-      round(as.numeric(tocout[[2]] - tocout[[1]])/60/60, 2), 'hours')
+  cat('\t \t \t >>> Sorted around', round(nrow(bx)/fps_after/60/60, 1), 'hours of data in',
+      round(as.numeric(tocout[[2]] - tocout[[1]])/60/60, 2), 'hours with', round(length(naframes)/fps_before/60/60), 
+      'hours of data removed due to NA frames')
 
   ### we are done!
 
