@@ -464,9 +464,9 @@ In practice, we first trim the initial 10 minutes of Δpixel to skip any strong 
 
 *	**activeboutStd**: the mean of all active bout standard deviations for one larva and one time window. For example, the standard deviation of delta pixels during the average active bout of larva #11 during day1 was 11.1 pixels.
 
-*	**activeboutMin**: the mean of all active bout minimums for one larvae and one time window. For example, the minimum delta pixel during the average active bout of larva #7 during day2 was 4.3 pixels.
+*	**activeboutMin**: the mean of all active bout minimums for one larva and one time window. For example, the minimum delta pixel during the average active bout of larva #7 during day2 was 4.3 pixels.
 
-*	**activeboutMax**: the maximum of all active bout minimums for one larvae and one time window. For example, the maximum delta pixel during the average active bout of larva #10 during day2 was 25.3 pixels.
+*	**activeboutMax**: the mean of all active bout maximums for one larva and one time window. For example, the maximum delta pixel during the average active bout of larva #10 during day2 was 25.3 pixels.
 
 *	**activeboutNum**: the total number of active bouts one larva performed during one time window. For example, larva #22 performed 34,736 swimming bouts (active bouts) during day1.
 
