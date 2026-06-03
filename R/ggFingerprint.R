@@ -625,8 +625,8 @@ ggPairwiseHeat <- function(fgp,
 
     # reorder rows
     pwm <- pwm[match(pwm$date_box_grp, dbgorder) , ]
-    # reorder columns
 
+    # reorder columns
     # new order of columns:
     colord <- match(colnames(pwm)[2:ncol(pwm)], dbgorder)
     # but this is not counting first column which is the date_box_grp (rownames)
