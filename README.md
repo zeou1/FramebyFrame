@@ -8,22 +8,22 @@ Already using the Zebrabox? Read below ([Frame-by-frame manifesto](#The-frame-by
 
 Not did your experiment yet? Make sure to read [Experimental design commandments](#Experimental-design-commandments) for some advice.  
 
-[![alt text][1.2]][1] [@francois_kroll](https://twitter.com/francois_kroll)
-
-:email: francois@kroll.be
-
-<!-- icons with padding -->
-[1.1]: http://i.imgur.com/tXSoThF.png (twitter icon with padding)
-
-<!-- icons without padding -->
-[1.2]: http://i.imgur.com/wWzX9uB.png (twitter icon without padding)
-
-<!-- links to your social media accounts -->
-[1]: https://twitter.com/francois_kroll
-
+:email: francois@kroll.be  
+[@francoiskroll.bsky.social](https://bsky.app/profile/francoiskroll.bsky.social)
 
 > — _I do not know anything about R so this package is not for me._    
 I wrote everything with that in mind, I promise! The amount of R (or any coding language) you need to know in order to run a complete analysis is minuscule, and I wrote it all below (see [R basics](#R-basics)).
+
+___
+
+## Citation
+
+Please cite us if you use FramebyFrame in your work.
+
+François Kroll, Joshua Donnelly, Güliz Gürel Özcan, Eirinn Mackay, Jason Rihel  
+**Behavioural pharmacology predicts disrupted signalling pathways and candidate therapeutics from zebrafish mutants of Alzheimer’s disease risk genes**  
+_eLife_, 2024  
+https://doi.org/10.7554/eLife.96839.2
 
 ___
 
@@ -268,7 +268,9 @@ vpSorter(ffDir="~/.../220531_14_15_rawoutput/",
 * `ffDir`: path to the folder containing your raw .xls/xlsx files.  
 * `zebpath`: path to the Zebralab results file (.xls/xlsx).  
 * `boxGen`: 2 if you are using the newer version of Zebralab (post circa 2020), 1 for previous versions.
-> Note sure which one? Open one of the raw .xls/xlsx files, are the Δ pixel values (typically in column _data1_) mostly 1s or mostly 0s? If mostly 1s: `boxGen=1`; if mostly 0s: `boxGen=2`
+> Not sure which one? Open one of the raw .xls/xlsx files, are the Δ pixel values (typically in column _data1_) mostly 1s or mostly 0s? If mostly 1s: `boxGen=1`; if mostly 0s: `boxGen=2`
+* `twoBoxMode`: `TRUE` if you had two boxes running in parallel, otherwise `FALSE`.  
+* `boxnum`: leave as `boxnum=1`, except if you had two boxes running in parallel, then run `vpSorter` once with `boxnum=1` then a second time with `boxnum=2` to generate one RAWs.csv file per box.  
 * `zt0`: Zeitgeber 0 (ZT0). What is the time of your sunrise?  
 * `dayduration`: how long does the day last in your experiment? By day, we mean lights ON.  
 
@@ -1032,3 +1034,15 @@ FramebyFrame now supports DanioVision data! Please see function `dvSorter` in [T
 09/04/2024  
 * New function `ggDeltaPx` to plot small plot of Δ pixel timecourse for one well. See [DOCUMENTATION](DOCUMENTATION.md#ggdeltapx)).  
 * (BETA) New function `replacePulses` to replace frames during which a sentinel well moves. Collaboration with Leah Elias, Johns Hopkins University.
+
+### v1.2.0
+15/08/2024  
+* for all timecourse plots (i.e. `ggActivityTraceGrid`, `ggActivityTraceByGroup`, `ggSleepTraceByGroup`): new setting `xtick` to control x axis tick intervals. See [DOCUMENTATION](DOCUMENTATION.md)).
+
+### v1.3.0
+12/09/2024
+* slightly better support for analysis by windows of interest (woi), `ggParameterGrid` & `ggFingerprint` are usable.
+
+### v1.4.0
+01/10/2024
+New setting `dbgorder` for `ggPairwiseHeat`. See [DOCUMENTATION](DOCUMENTATION.md)).

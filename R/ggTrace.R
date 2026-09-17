@@ -67,6 +67,7 @@ ggActivityTraceGrid <- function (ffpath,
                                  xstop=0,
                                  trimstart=0,
                                  trimstop=0,
+                                 xtick=24,
                                  xmajorOrNo=TRUE,
                                  ymajorOrNo=TRUE,
                                  sunlinesOrNo=FALSE,
@@ -182,6 +183,7 @@ ggActivityTraceGrid <- function (ffpath,
             xstop=xstop,
             trimstart=trimstart,
             trimstop=trimstop,
+            xtick=xtick,
             xmajorOrNo=xmajorOrNo,
             ymajorOrNo=ymajorOrNo,
             sunlinesOrNo=sunlinesOrNo,
@@ -201,7 +203,9 @@ ggActivityTraceGrid <- function (ffpath,
 
   gggrid <- ggpubr::ggarrange(plotlist=ggL, ncol=ncol, nrow=nrow)
 
-  ggplot2::ggsave(exportPath, gggrid, width=width, height=height, units='mm')
+  if(exportOrNo) {
+    ggplot2::ggsave(exportPath, gggrid, width=width, height=height, units='mm')
+  }
 
   # return plot so it displays in RStudio
   return(gggrid)
@@ -280,6 +284,7 @@ ggActivityTraceByGroup <- function(ffpath,
                                    xstop=0,
                                    trimstart=0,
                                    trimstop=0,
+                                   xtick=24,
                                    xmajorOrNo=TRUE,
                                    ymajorOrNo=TRUE,
                                    nightBgOrNo=FALSE,
@@ -327,6 +332,7 @@ ggActivityTraceByGroup <- function(ffpath,
           xstop=xstop,
           trimstart=trimstart,
           trimstop=trimstop,
+          xtick=xtick,
           xmajorOrNo=xmajorOrNo,
           ymajorOrNo=ymajorOrNo,
           nightBgOrNo=nightBgOrNo,
@@ -412,6 +418,7 @@ ggSleepTraceByGroup <- function(ffpath,
                                 xstop=0,
                                 trimstart=0,
                                 trimstop=0,
+                                xtick=24,
                                 xmajorOrNo=TRUE,
                                 ymajorOrNo=TRUE,
                                 nightBgOrNo=FALSE,
@@ -459,6 +466,7 @@ ggSleepTraceByGroup <- function(ffpath,
           xstop=xstop,
           trimstart=trimstart,
           trimstop=trimstop,
+          xtick=xtick,
           xmajorOrNo=xmajorOrNo,
           ymajorOrNo=ymajorOrNo,
           nightBgOrNo=nightBgOrNo,
@@ -503,6 +511,7 @@ ggSleepTraceByGroup <- function(ffpath,
 #' @param xstop
 #' @param trimstart
 #' @param trimstop
+#' @param xtick
 #' @param xmajorOrNo
 #' @param ymajorOrNo
 #' @param nightBgOrNo
@@ -554,6 +563,7 @@ ggTrace <- function(tc,
                     xstop,
                     trimstart,
                     trimstop,
+                    xtick=xtick,
                     xmajorOrNo,
                     ymajorOrNo,
                     nightBgOrNo,
@@ -685,6 +695,17 @@ ggTrace <- function(tc,
   # xstop = 0 means plot all of the timecourse
   if (xstop==0) {xstop=max(sbg$zhrs)}
 
+  # check that there is some data in the interval set by xstart & xstop
+  # i.e. some data after xstart & before xstop
+  sbgCheckX <- sbg %>%
+    filter(zhrs >= xstart & zhrs <= xstop)
+  if(nrow(sbgCheckX)==0) stop('\t \t \t >>> Error ggTrace: there is no data in the interval set by xstart & xstop,\
+                              i.e. there is no timepoint that is after xstart and before xstop.\
+                              Note, the first timepoint is ', round(min(sbg$zhrs), 2),' and the last timepoint is ', round(max(sbg$zhrs), 2),'.\
+                              You can also set xstart=0 and xstop=0 to plot all the data.\n')
+  rm(sbgCheckX)
+
+
   # are we plotting every group? depends on what given in grporder
   # additionally, re-order factors of grp column so legend etc. are in the order required
   if ( !is.na(grporder[1]) ) {
@@ -708,6 +729,11 @@ ggTrace <- function(tc,
   # should we trim the start of the experiment?
   if (trimstart!=0) { # if trimming beginning of the experiment
     # trimstart = 0 means no trimming
+    # check that user did not set trimstart to be after the end of the experiment
+    if(max(sbg$zhrs) < trimstart) stop('\t \t \t >>> Error ggTrace: trimstart was set to ', trimstart,
+                                       ' but last timepoint of the experiment is ', round(max(sbg$zhrs), 2),' hours (since ZT0 on day0)\
+                                       so trimming would remove all data.\
+                                       Use trimstart=0 to keep all data (no trimming) or set it to a value *below* ', round(max(sbg$zhrs), 2), '.\n')
     sbg <- sbg %>%
       filter(zhrs >= trimstart)
   }
@@ -716,6 +742,11 @@ ggTrace <- function(tc,
   if (trimstop!=0) { # if trimming end of the experiment
     # trimstop = 0 means no trimming
     # (I do not think there is any case where the user would actually want to set trimstop to 0 as that would mean not plotting any data)
+    # check that user did not set trimstop to be before the start of the experiment
+    if(min(sbg$zhrs) > trimstop) stop('\t \t \t >>> Error ggTrace: trimstop was set to ', trimstop,
+                                       ' but first timepoint of the experiment is ', round(min(sbg$zhrs), 2),' hours (since ZT0 on day0)
+                                       so trimming would remove all data.\
+                                       Use trimstop=0 to keep all data (no trimming) or set it to a value *after* ', round(min(sbg$zhrs), 2), '.\n')
     sbg <- sbg %>%
       filter(zhrs <= trimstop)
   }
@@ -839,7 +870,7 @@ ggTrace <- function(tc,
 
     guides(color=guide_legend(keywidth=0.5)) + # reduces the width of the bar in legend
 
-    scale_x_continuous(breaks=seq(0, max(sbg$zhrs), 24)) +
+    scale_x_continuous(breaks=seq(0, max(sbg$zhrs), xtick)) +
 
     {if(!legendOrNo) theme(legend.position='none')} +
 
@@ -854,15 +885,9 @@ ggTrace <- function(tc,
     xlab(xname) + ylab(yname) +
     coord_cartesian(ylim=c(ymin, ymax), xlim=c(xstart, xstop))
 
-
-
-  if (!exportOrNo) {return(tracebygrp)} # if do not export the plot to drive, return the ggplot object instead
-  # Note; if no export, will stop there due to return() being called, so will not see below
-
-  # export plot
-  ggsave(exportPath, width=width, height=height, units='mm', device=cairo_pdf)
-
-  # and return so can see in RStudio
+  # export plot, if needed
+  if (exportOrNo) { ggsave(exportPath, width=width, height=height, units='mm', device=cairo_pdf) }
+  # whether or not we export, return the ggplot object so it displays in RStudio
   return(tracebygrp)
 
 }

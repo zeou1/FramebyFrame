@@ -1,6 +1,6 @@
 Package: FramebyFrame
 Title: Behaviour Analysis of Zebrafish Larvae
-Version: 1.1.0
+Version: 1.4.0
 Authors@R:
     person("Francois", "Kroll", , "francois@kroll.be", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-9908-2648"))
@@ -8,7 +8,7 @@ Description: Analysis of experiments studying behaviour of zebrafish larvae unde
 License: `use_gpl3_license()`
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Imports:
     BBmisc,
     data.table,

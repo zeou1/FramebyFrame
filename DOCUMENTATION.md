@@ -181,12 +181,13 @@ ggActivityTraceGrid currently does not support making a legend. Accordingly, ple
 
 **xstop**: end of the X axis, in hours since 9 AM of day0. Default is 0, which means plot all the timecourse.  
 
-**trimstart**: whether to trim some of the data at the start, in number of hours since 9 AM of day0. e.g. `trimstart=24` trims all the data before 9 AM night0 >> day1 transition (i.e. 24 hours after 9 AM day 0). It is slightly different than xstart because xstart leaves a little bit of the data before the start (try to see how it looks without trimming). If you want the trace to start at 24 hours (9 AM day1) sharp, use `xstart=24` and `trimstart=24` together. Default is 0, i.e. no trimming.  
+**trimstart**: whether to trim some of the data at the start, in number of hours since 9 AM of day0. e.g. `trimstart=24` trims all the data before 9 AM night0 >> day1 transition (i.e. 24 hours after 9 AM day 0). It is slightly different than xstart because xstart leaves a little bit of the data before the start (try to see how it looks without trimming). If you want the trace to start at 24 hours (9 AM day1) sharp, use `xstart=24` and `trimstart=24` together. Default is 0, which means no trimming.  
 
-**trimstop**: whether to trim some of the data at the end, in number of hours since 9 AM of day0. e.g. `trimstart=72` trims all the data after 9AM night2 >> day3 transition. (i.e. 72 hours after 9 AM day 0). It is slightly different than xstop because xstop leaves a little bit of the data after the stop (try to see how it looks without trimming). If you want the trace to stop at 72 hours (9 AM day3) sharp, use xstart=72 and `trimstart=72` together.
+**trimstop**: whether to trim some of the data at the end, in number of hours since 9 AM of day0. e.g. `trimstart=72` trims all the data after 9AM night2 >> day3 transition. (i.e. 72 hours after 9 AM day 0). It is slightly different than xstop because xstop leaves a little bit of the data after the stop (try to see how it looks without trimming). If you want the trace to stop at 72 hours (9 AM day3) sharp, use xstart=72 and `trimstart=72` together. Default is 0, which means no trimming.  
 
-Default is 0, i.e. no trimming. Default is 0, which means no trimming.  
 Note, xstart/xstop & trimstart/trimstop are especially useful to align plots from different experiments, as you probably did not start/stop the experiments at exactly the same times.
+
+**xtick**: interval in hours of x axis ticks. Default is 24.  
 
 **xmajorOrNo**: whether or not (TRUE or FALSE) to draw the major vertical grid lines in the background of the plot. Default is TRUE.  
 
@@ -268,6 +269,8 @@ Setting will be ignored if `smoothOrNo=FALSE`. Default is 30\*60 = 1800 seconds 
 **trimstop**: whether to trim some of the data at the end, in number of hours since 9 AM of day0. e.g. `trimstart=72` trims all the data after 9AM night2 >> day3 transition. (i.e. 72 hours after 9 AM day 0). It is slightly different than xstop because xstop leaves a little bit of the data after the stop (try to see how it looks without trimming). If you want the trace to stop at 72 hours (9 AM day3) sharp, use `xstart=72` and `trimstart=72` together. Default is 0, i.e. no trimming. Default is 0, which means no trimming.
 
 Note, xstart/xstop & trimstart/trimstop are especially useful to align plots from different experiments, as you probably did not start/stop the experiments at exactly the same times.
+
+**xtick**: interval in hours of x axis ticks. Default is 24.  
 
 **xmajorOrNo**: whether or not (TRUE or FALSE) to draw the major vertical grid lines in the background of the plot. Default is TRUE.
 
@@ -364,13 +367,15 @@ Plots binned & smoothed sleep traces by group.
 
 **xstart**: start of the X axis, in hours since 9 AM of day0. Default is 0.
 
-**xstop**: end of the X axis, in hours since 9 AM of day0. Default is 0, which means plot all the timecourse.
+**xstop**: end of the X axis, in hours since 9 AM of day0. Default is 0, which means plot all the timecourse.  
 
 **trimstart**: whether to trim some of the data at the start, in number of hours since 9 AM of day0. e.g. `trimstart=24` trims all the data before 9 AM night0 >> day1 transition (i.e. 24 hours after 9 AM day 0). It is slightly different than xstart because xstart leaves a little bit of the data before the start (try to see how it looks without trimming). If you want the trace to start at 24 hours (9 AM day1) sharp, use `xstart=24` and `trimstart=24` together. Default is 0, i.e. no trimming.
 
 **trimstop**: whether to trim some of the data at the end, in number of hours since 9 AM of day0. e.g. `trimstart=72` trims all the data after 9AM night2 >> day3 transition. (i.e. 72 hours after 9 AM day 0). It is slightly different than xstop because xstop leaves a little bit of the data after the stop (try to see how it looks without trimming). If you want the trace to stop at 72 hours (9 AM day3) sharp, use xstart=72 and `trimstart=72` together. Default is 0, i.e. no trimming. Default is 0, which means no trimming.
 
-Note, xstart/xstop & trimstart/trimstop are especially useful to align plots from different experiments, as you probably did not start/stop the experiments at exactly the same times.
+Note, xstart/xstop & trimstart/trimstop are especially useful to align plots from different experiments, as you probably did not start/stop the experiments at exactly the same times.  
+
+**xtick**: interval in hours of x axis ticks. Default is 24.  
 
 **xmajorOrNo**: whether or not (TRUE or FALSE) to draw the major vertical grid lines in the background of the plot. Default is TRUE.
 
@@ -459,9 +464,9 @@ In practice, we first trim the initial 10 minutes of Δpixel to skip any strong 
 
 *	**activeboutStd**: the mean of all active bout standard deviations for one larva and one time window. For example, the standard deviation of delta pixels during the average active bout of larva #11 during day1 was 11.1 pixels.
 
-*	**activeboutMin**: the mean of all active bout minimums for one larvae and one time window. For example, the minimum delta pixel during the average active bout of larva #7 during day2 was 4.3 pixels.
+*	**activeboutMin**: the mean of all active bout minimums for one larva and one time window. For example, the minimum delta pixel during the average active bout of larva #7 during day2 was 4.3 pixels.
 
-*	**activeboutMax**: the maximum of all active bout minimums for one larvae and one time window. For example, the maximum delta pixel during the average active bout of larva #10 during day2 was 25.3 pixels.
+*	**activeboutMax**: the mean of all active bout maximums for one larva and one time window. For example, the maximum delta pixel during the average active bout of larva #10 during day2 was 25.3 pixels.
 
 *	**activeboutNum**: the total number of active bouts one larva performed during one time window. For example, larva #22 performed 34,736 swimming bouts (active bouts) during day1.
 
@@ -598,7 +603,7 @@ I usually run two Zebraboxes in parallel with one clutch in each to serve both a
 
 Plots a grid of scatter plots, one per behavioural parameter. Whatever the settings used, one dot represents one larva during one time window.
 
-ggParameterGrid() does not currently support parameters calculated on specific window(s) of interest. Let me know if needed.
+>Are you doing your analysis by window(s) of interest? `ggParameterGrid()` can work but was not tested extensively, let me know if you face any issues.
 
 **paDir**: directory that stores the parameter tables, typically called bhvparams. For example, `paDir=here('bhvparams/')`. You can have as many experiments/parameters as you want in this directory. You can also give multiple bhvparams directories, e.g. `paDir=c(here('220906_exp1/bhvparams/'), here('220906_exp2/bhvparams/'))`. It will import all the parameter tables it finds in these directories.
 
@@ -946,6 +951,8 @@ The process is the same for nights and for each behavioural parameter.
 
 **avgDayNight**: whether or not (TRUE or FALSE) to average, for each parameter and each larva, its days datapoints together and its nights datapoints together prior to calculating the fingerprint. This will affect what each unique parameter is in the fingerprint: if TRUE, parameters are e.g. day_sleepHours and night_sleepHours; if FALSE, parameters are e.g. day1_sleepHours, day2_sleepHours, night1_sleepHours, night2_sleepHours. In other words, do you want to keep individual day/night resolution or not?
 
+>Are you doing your analysis by window(s) of interest? Then, the `avgDayNight` parameter controls whether, for each parameter and each larva, we average the datapoints (Z-scores) from the various windows of interest. This will affect what each unique parameter is in the fingerprint: if TRUE, parameters are e.g. woi_sleepHours (all windows of interest were averaged); if FALSE, parameters are e.g. woi1_sleepHours, woi2_sleepHours, etc. (windows of interest are kept separated). In other words, do you want to keep individual windows-of-interest resolution or not?
+
 About **mergeExp1–3** settings: this can be useful if you tracked a single clutch into multiple boxes to boost sample sizes. As we are pooling Z-scores to controls within each box, this should in theory control for technical variability between boxes. A benefit of pooling is to avoid creating “fake replicates”. Indeed, keeping boxes separate can make it look like you had more replicates than in reality (the technical replicates should probably not count).
 
 ### ggFingerprint(...)
@@ -1012,6 +1019,8 @@ Calculates the similarity between pairwise behavioural fingerprint and represent
 * **simScore**: one of three possible "similarity scores": `correlation` (Pearson correlation), `cosine` (cosine similarity), or `euclidean` (Euclidean distance).  
 
 * **grporder**: do you have a preferred order for the groups (genotypes)? If yes, mention it here. If no, you can simply not mention this setting or give `grporder=NA`. You can exclude any group (genotype) by simply not mentioning it here. Default is NA, which keeps all groups.  
+
+* **dbgorder**: to manually set the order of the fingerprints in the heatmap. "dbg" stands for date_box_group. For example `dbgorder=c('210907_13_psen2', '210907_12_psen2')` would reverse the default ordering (which would have been 12 then 13, as following alphabetical order). If you omit a date_box_group here, it will exclude that fingerprint from the heatmap. Default is NA, which follows alphabetical order of the date_box_group, after ordering by `grporder` if it was given.  
 
 * **removeControl**: whether (TRUE) or not (FALSE) to remove the controls' fingerprints. I think you should always use TRUE here as the controls' fingerprints are always 0 by definition. Default is TRUE.  
 
@@ -1182,3 +1191,7 @@ Try following the instructions above. If that does not help, check how much spac
 > Errors/warnings related to "cairo", such as _failed to load cairo DLL_
 
 Installing `xquartz` on your computer seems to fix this issue. On Mac, if you have Homebrew installed: `brew install --cask xquartz` in Terminal. I found that installing latest release of XQuartz (https://www.xquartz.org/index.html) like you would for any other app works too.  
+
+> `vpSorter`: Error in if (max(fpspw) - min(fpspw) > 1) { : missing value where TRUE/FALSE needed
+
+Please check that setting `twoBoxMode` is correct.

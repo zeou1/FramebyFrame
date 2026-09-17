@@ -489,7 +489,15 @@ vpSorter <- function(ffDir,
   # there is no simple way to guess whether we are given data for a single box or two from the raw .xls files alone
   # for example, we could confuse two 48-well plates with a single box with a 96-well plate
   # hence, asked user at the top whether 'twoBoxMode'; if yes, then divide number of unique well IDs by two
-  nwells <- length(sort(unique(readr::parse_number(fi1$location))))
+  nwells <- length(unique(fi1$location))
+  # 16/07/2024: it was first parsing numbers, but can simply count number of unique entries in location column?
+  # issue with parsing number arises with a format like c1-001, where it just finds 1 from c1
+
+  ### 23/07/2025
+  # add warning here
+  if(!twoBoxMode & nwells==192) {
+    SpeaknRecord('*WARNING*: twoBoxMode was set as FALSE but there are 192 unique wells written in the files; can you check that twoBoxMode should not be TRUE?', warning=TRUE)
+  }
 
   if (twoBoxMode) {
     nwells <- nwells/2
@@ -580,14 +588,47 @@ vpSorter <- function(ffDir,
       stop('\t \t \t \t >>> Error: Box number can only be 1 or 2. Did you write something else? \n')
     }
 
+  } else if (locfirstchar=='L' & locnchar==5) { # OPTION 6 (seen at ICM, Paris)
+
+    SpeaknRecord('Locations are written Loc01, Loc02, ...')
+
+    # set the locations accordingly
+    if (boxnum==1){
+      SpeaknRecord('Running BOX1 so expecting Loc01, Loc02, ...')
+      locs=sprintf('Loc%0.2d', 1:nwells) # Box1 locations = Loc01 >> Loc96
+    } else if (boxnum==2) {
+      SpeaknRecord('Running BOX2 so expecting C0201, C0202, ...')
+      # note 14/06/2024, I am guessing this, only time I have seen the Loc version of the column it was for a single box and it was Loc01, ..., Loc96
+      # so probably second box would be Loc97 >> Loc192?
+      locs=sprintf('Loc%2d', 97:(97+nwells-1)) # Box2 locations = w097 >> w192
+    } else {
+      stop('\t \t \t \t >>> Error: Box number can only be 1 or 2. Did you write something else? \n')
+    }
+
     # if cannot recognise one of the known formats...
+  }   else if (locfirstchar=='c' & locnchar==6) { # OPTION 7 (Daphnia guy)
+
+    SpeaknRecord('Locations are written c1-001, c1-002, ...')
+
+    # set the locations accordingly
+    if (boxnum==1){
+      SpeaknRecord('Running BOX1 so expecting c1-001, c1-002, ...')
+      locs=sprintf('c1-%0.3d', 1:nwells) # Box1 locations = c1-001 >> c1-096
+    } else if (boxnum==2) {
+      SpeaknRecord('Running BOX2 so expecting c2-001, c2-002, ...')
+      # note 16/07/2024, I am guessing this, only time I have seen the format was for a single box
+      # so probably second box would be c2-001 >> c2-096?
+      locs=sprintf('c2-%0.3d', 1:nwells) # Box2 locations = c2-001 >> c2-096?
+    } else {
+      stop('\t \t \t \t >>> Error: Box number can only be 1 or 2. Did you write something else? \n')
+    }
+
     } else {
 
-    stop('\t \t \t \t >>> Error: in the xls files, expecting the location column to be formatted as: C001 or c1 or w001 or LocA01 or C0101.
+    stop('\t \t \t \t >>> Error: in the xls files, expecting the location column to be formatted as: C001 or c1 or w001 or LocA01 or C0101 or Loc01.
          \t \t \t Open one of the xls files, is your location column written differently? Viewpoint always finds new ways to name the wells!
          \t \t \t Send me a sample xls file on francois@kroll.be and I will update the package. \n')
-
-    }
+  }
 
   # note, in comments below will usually assume 96 wells but now locs created above actually represents number of wells
   # i.e. not always 96
@@ -1205,8 +1246,20 @@ vpSorter <- function(ffDir,
   # i.e. number of hours since first day0 9AM
   startdate <- lubridate::date(bx$fullts[1]) # get startdate of the experiment = date of the first timepoint
 
+  # is ZT0 on the day of the experiment or day before?
+  # startts is when experiment started
+  # when ZT0 is expected to be is:
+  zt0full <- lubridate::ymd_hms(paste(startdate, zt0)) # expected ZT0 on same date of when experiment started
+
+  # ZT0 should always be before the start of the experiment!
+  # otherwise we generate negative zhrs
+  # if it is after (e.g. experiment was started at 1 PM but ZT0 is 11 PM; in the case of reverse LD cycle), go one day earlier
+  if(zt0full > startts) {
+    zt0full <- zt0full - lubridate::days(1)
+  }
+
   bx <- bx %>%
-    add_column(zhrs = as.numeric(difftime(bx$fullts, lubridate::ymd_hms(paste(startdate, zt0)), units='hours')),
+    add_column(zhrs = as.numeric(difftime(bx$fullts, zt0full, units='hours')),
                .before='exsecs')
   # Zeitgeber is time difference in hours since first ZT0
 

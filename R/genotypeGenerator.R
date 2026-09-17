@@ -64,9 +64,9 @@ genotypeGenerator <- function(plateMap) {
   #### clean up ####
   # keep only wells
 
-  # in formats, remove all Normal cells
+  # in formats, remove all "Normal" or "Standard" cells
   # actual wells should be genotypeX or empty or excluded
-  frmts <- frmts[-which(frmts=='Normal')]
+  frmts <- frmts[-which(frmts %in% c('Normal', 'Standard'))]
 
   # in contents,
   # remove all NA
@@ -97,7 +97,11 @@ genotypeGenerator <- function(plateMap) {
     geno_names <- unique(cnts[!is.na(cnts)])
   }
 
-  if (length(genos) != length(geno_names)) stop('\t \t \t \t >>> Error: Not the same number of genotypes and genotype names \n') # checkpoint
+  if (length(genos) != length(geno_names)) {
+    cat('\t \t \t \t Genotypes:', genos, '\n')
+    cat('\t \t \t \t Genotype names:', geno_names, '\n')
+    stop('\t \t \t \t >>> Error: Not the same number of genotypes and genotype names.')
+  }
 
   # matches genotype number to genotype name
   genonames_matched <- c()
